@@ -1,19 +1,25 @@
-import 'package:machine_test/product_list_screen/model/product.dart';
 
-abstract class EditEvent {}
+
+abstract class EditEvent {
+  @override
+  List<Object> get props => [];
+}
 
 class FetchProduct extends EditEvent {
-  final int productId;
-  FetchProduct(this.productId);
+  final int id;
+
+  FetchProduct(this.id);
+
+  @override
+  List<Object> get props => [id];
 }
 
 class UpdateProduct extends EditEvent {
-  final int productId;
-  final Map<String, dynamic> updatedData;
-  UpdateProduct(this.productId, this.updatedData);
-}
+  final int id;
+  final Map<String, dynamic> data;
 
-class UpdateProductUI extends EditEvent {
-  final Product updatedProduct;
-  UpdateProductUI(this.updatedProduct);
+  UpdateProduct(this.id, this.data);
+
+  @override
+  List<Object> get props => [id, data];
 }

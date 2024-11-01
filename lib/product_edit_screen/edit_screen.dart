@@ -4,6 +4,7 @@ import 'package:machine_test/product_edit_screen/bloc/edit_bloc.dart';
 import 'package:machine_test/product_edit_screen/bloc/edit_event.dart';
 import 'package:machine_test/product_edit_screen/bloc/edit_state.dart';
 import 'package:machine_test/product_edit_screen/product_edit_service/product_edit_repo.dart';
+
 import 'package:machine_test/product_list_screen/model/product.dart';
 import 'package:machine_test/product_list_screen/widget/customfont.dart';
 
@@ -61,8 +62,10 @@ class _ProductDetailFormState extends State<ProductDetailForm> {
   void initState() {
     super.initState();
     titleController = TextEditingController(text: widget.product.title);
-    descriptionController = TextEditingController(text: widget.product.description);
-    priceController = TextEditingController(text: widget.product.price.toString());
+    descriptionController =
+        TextEditingController(text: widget.product.description);
+    priceController =
+        TextEditingController(text: widget.product.price.toString());
   }
 
   @override
@@ -74,61 +77,57 @@ class _ProductDetailFormState extends State<ProductDetailForm> {
   }
 
   void _saveChanges() {
-    Product updatedProduct = widget.product.copyWith(
-      title: titleController.text,
-      description: descriptionController.text,
-      price: double.tryParse(priceController.text) ?? widget.product.price,
-    );
-    context.read<EditBloc>().add(UpdateProductUI(updatedProduct));
+    final Map<String, dynamic> updatedData = {
+      'title': titleController.text,
+      'description': descriptionController.text,
+      'price': double.tryParse(priceController.text) ?? widget.product.price,
+    };
+
+    context.read<EditBloc>().add(UpdateProduct(widget.product.id, updatedData));
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(16.0),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              height: 250,
-              width: 250,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.grey[200],
-              ),
-              child: Image.network(
-                widget.product.image,
-                fit: BoxFit.cover,
-              ),
+      child: Column(
+        children: [
+          Container(
+            height: 250,
+            width: 250,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.grey[200],
             ),
-            TextField(
-              controller: titleController,
-              style: CustomFont().titleText,
-              decoration: InputDecoration(labelText: "Title"),
+            child: Image.network(
+              widget.product.image,
+              fit: BoxFit.cover,
             ),
-            TextField(
-              maxLines: 6,
-              controller: descriptionController,
-              style: CustomFont().bodyText,
-              decoration: InputDecoration(labelText: "Description"),
-            ),
-            TextField(
-              controller: priceController,
-              style: CustomFont().bodyText,
-              decoration: InputDecoration(labelText: "Price"),
-              keyboardType: TextInputType.number,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              style: ButtonStyle(),
-              onPressed: _saveChanges,
-              child: Text("Save Changes"),
-            ),
-          ],
-        ),
+          ),
+          TextField(
+            controller: titleController,
+            style: CustomFont().titleText,
+            decoration: InputDecoration(labelText: "Title"),
+          ),
+          TextField(
+            maxLines: 6,
+            controller: descriptionController,
+            style: CustomFont().bodyText,
+            decoration: InputDecoration(labelText: "Description"),
+          ),
+          TextField(
+            controller: priceController,
+            style: CustomFont().bodyText,
+            decoration: InputDecoration(labelText: "Price"),
+            keyboardType: TextInputType.number,
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: _saveChanges,
+            child: Text("Save Changes"),
+          ),
+        ],
       ),
     );
   }
 }
-
-
